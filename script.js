@@ -1,37 +1,50 @@
-const endDate = "27 July 2022 08:20:00 PM"
-
-document.getElementById("end-date").innerText = endDate;
-const inputs = document.querySelectorAll("input")
-    // const clock = () => {
-
-// }
-
-function clock() {
-    const end = new Date(endDate)
-    const now = new Date()
-    const diff = (end - now) / 1000;
-
-    if (diff < 0) return;
-
-    // convert into days;
-    inputs[0].value = Math.floor(diff / 3600 / 24);
-    inputs[1].value = Math.floor(diff / 3600) % 24;
-    inputs[2].value = Math.floor(diff / 60) % 60;
-    inputs[3].value = Math.floor(diff) % 60;
+window.onload = () => {
+    document.querySelector('#calculate').onclick = calculate;
+    document.querySelector('#reset').onclick = reset;
 }
 
-// initial call
-clock()
+function calculate () {
+    const date = document.querySelector("#date").value;
+    const time = document.querySelector("#time").value;
 
-/**
- *  1 day = 24 hrs
- *  1 hr = 60 mins
- *  60 min = 3600 sec
- */
+    const stop = document.querySelector('#stop');
+    
+    const endTime = new Date(date + " " + time);
 
-setInterval(
-    () => {
-        clock()
-    },
-    1000
-)
+    const interval = setInterval(() => calculateTime(endTime), 1000);
+
+    stop.addEventListener('click', () => {
+        clearInterval(interval);
+    })
+}
+
+function calculateTime(endTime) {
+    const currentTime = new Date();
+
+    const days = document.querySelector('#countdown-days');
+    const hours = document.querySelector('#countdown-hours');
+    const minutes = document.querySelector('#countdown-minutes');
+    const seconds = document.querySelector('#countdown-seconds');
+
+    if (endTime > currentTime) {
+        const timeLeft = (endTime - currentTime) / 1000;
+
+        console.log(timeLeft);
+        days.innerText = Math.floor(timeLeft / (24 * 60 * 60));
+        hours.innerText = Math.floor((timeLeft / (60 * 60)) % 24);
+        minutes.innerText = Math.floor((timeLeft / 60) % 60);
+        seconds.innerText = Math.floor(timeLeft % 60);
+    } else {
+        days.innerText = 0
+        hours.innerText = 0
+        minutes.innerText = 0
+        seconds.innerText = 0
+    }
+}
+
+function reset() {
+    document.querySelector('#countdown-days').innerText = 0;
+    document.querySelector('#countdown-hours').innerText = 0;
+    document.querySelector('#countdown-minutes').innerText = 0;
+    document.querySelector('#countdown-seconds').innerText = 0;
+}
